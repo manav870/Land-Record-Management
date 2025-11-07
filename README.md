@@ -48,6 +48,25 @@ Land Record Management/
 5. Deploy smart contracts
 6. Run the application
 
+## Quick Start (Windows)
+
+A helper script `run.bat` is included to automate the local setup:
+
+1. Install the prerequisites above (Node.js 18+, npm, MetaMask).
+2. Clone the repository and open the project folder.
+3. Double-click `run.bat` or run it from a terminal (`run.bat`).
+   - The script checks for Node.js/npm.
+   - Installs backend/frontend dependencies if they are missing.
+   - Opens three terminals: Hardhat node, contract deployment, and the React app.
+4. Keep the Hardhat node window open. After deployment finishes, copy the
+   contract address from the deployment window and update `frontend/src/utils/contract.js`
+   if it differs from the current value.
+5. Configure MetaMask (Hardhat Local network: RPC `http://127.0.0.1:8545`, Chain ID `1337`) and
+   import one of the private keys printed in the Hardhat terminal.
+6. Access the app at [http://localhost:3000](http://localhost:3000).
+
+---
+
 ## Next Steps
 
 Follow the step-by-step setup instructions that will be provided in each phase.
