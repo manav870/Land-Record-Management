@@ -72,16 +72,16 @@ echo Launching project terminals...
 echo ------------------------------------------------------------------------------
 
 echo [INFO] Terminal 1: Hardhat node
-start "" cmd /k "cd /d ^"%PROJECT_ROOT%^" && npm run node"
+start "Hardhat Node" /D "%PROJECT_ROOT%" cmd /k npm run node
 
 echo [INFO] Waiting 5 seconds to allow the Hardhat node to start...
 timeout /t 5 >NUL
 
 echo [INFO] Terminal 2: Deploy smart contract
-start "" cmd /k "cd /d ^"%PROJECT_ROOT%^" && npm run deploy && echo. && echo Deployment complete. Copy the contract address above and update frontend\src\utils\contract.js if necessary. && echo Press any key to close this window. && pause"
+start "Deploy Contract" /D "%PROJECT_ROOT%" cmd /k "npm run deploy && echo. && echo Deployment complete. Copy the contract address above and update frontend\src\utils\contract.js if necessary. && echo Press any key to close this window. && pause"
 
 echo [INFO] Terminal 3: React frontend
-start "" cmd /k "cd /d ^"%PROJECT_ROOT%\frontend^" && npm start"
+start "Frontend" /D "%PROJECT_ROOT%\frontend" cmd /k npm start
 
 echo.
 echo ==============================================================================
