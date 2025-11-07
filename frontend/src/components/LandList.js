@@ -16,6 +16,7 @@ function LandList({ provider, account, refreshTrigger }) {
     } else {
       setLands([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, provider, refreshTrigger]);
 
   const fetchLands = async () => {
@@ -26,10 +27,10 @@ function LandList({ provider, account, refreshTrigger }) {
 
     try {
       const contract = await getContract(provider);
-      
+
       // Get all land IDs owned by the account
       const landIds = await contract.getLandsByOwner(account);
-      
+
       // Fetch details for each land
       const landDetails = await Promise.all(
         landIds.map(async (id) => {
@@ -51,7 +52,7 @@ function LandList({ provider, account, refreshTrigger }) {
       );
 
       // Filter out any null values
-      setLands(landDetails.filter(land => land !== null));
+      setLands(landDetails.filter((land) => land !== null));
     } catch (err) {
       console.error('Error fetching lands:', err);
       setError(err.message || 'Failed to fetch your lands. Please try again.');
@@ -62,66 +63,66 @@ function LandList({ provider, account, refreshTrigger }) {
 
   if (!account) {
     return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <p className="text-yellow-800">Please connect your wallet to view your lands.</p>
+      <div className="glass-panel">
+        <h2 className="text-2xl font-semibold text-white">Connect wallet to view holdings</h2>
+        <p className="mt-3 text-sm text-slate-300">
+          Reconnect MetaMask to retrieve parcels associated with your address.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">My Lands</h2>
+    <div className="glass-panel">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Module 04</p>
+          <h2 className="mt-1 text-3xl font-semibold text-white">My Land Registry</h2>
+          <p className="mt-3 text-sm text-slate-300">
+            Review every parcel linked to your wallet. Refresh to sync with on-chain events minted
+            from other sessions.
+          </p>
+        </div>
         <button
           onClick={fetchLands}
           disabled={loading}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          className="secondary-btn"
         >
-          {loading ? 'Loading...' : 'Refresh'}
+          {loading ? 'Refreshing...' : 'Refresh Holdings'}
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
+        <div className="alert-card error mt-6">
           {error}
         </div>
       )}
 
       {loading && lands.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-600">Loading your lands...</p>
-        </div>
+        <div className="mt-8 text-center text-sm text-slate-300">Loading your lands...</div>
       ) : lands.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-600">You don't own any registered lands yet.</p>
-          <p className="text-sm text-gray-500 mt-2">Register a new land to get started!</p>
+        <div className="alert-card success mt-6">
+          You don't own any registered lands yet. Mint a parcel to populate this view.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="data-grid mt-8">
           {lands.map((land) => (
-            <div key={land.landId} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition duration-200">
-              <div className="mb-3">
-                <h3 className="text-lg font-semibold text-indigo-600">Land ID: {land.landId}</h3>
+            <div key={land.landId} className="land-card">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-white">Parcel #{land.landId}</h3>
+                <span className="badge">{land.area} sq. meters</span>
               </div>
-              <div className="space-y-2 text-sm">
-                <div>
-                  <p className="text-gray-600">Location</p>
-                  <p className="font-semibold text-gray-800">{land.location}</p>
-                </div>
-                <div>
-                  <p className="text-gray-600">Area</p>
-                  <p className="font-semibold text-gray-800">{land.area} sq. meters</p>
-                </div>
-                {land.description && (
-                  <div>
-                    <p className="text-gray-600">Description</p>
-                    <p className="text-gray-800 line-clamp-2">{land.description}</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-gray-600">Registered</p>
-                  <p className="text-gray-800">{land.registrationDate}</p>
-                </div>
+              <p className="mt-3 text-sm text-slate-300">
+                {land.location || 'Unnamed parcel'}
+              </p>
+              {land.description && (
+                <p className="mt-3 text-xs text-slate-400">{land.description}</p>
+              )}
+              <div className="mt-4 text-xs text-slate-400">
+                Registered: {land.registrationDate}
+              </div>
+              <div className="mt-3 text-xs text-slate-400">
+                Current owner: {formatAddress(land.currentOwner)}
               </div>
             </div>
           ))}

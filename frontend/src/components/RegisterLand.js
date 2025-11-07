@@ -53,8 +53,8 @@ function RegisterLand({ provider, account, onSuccess }) {
       // Wait for transaction to be mined
       await tx.wait();
 
-      setSuccess(`Land registered successfully! Land ID will be available after confirmation.`);
-      
+      setSuccess('Land registered successfully! Land ID will be available after confirmation.');
+
       // Reset form
       setFormData({
         location: '',
@@ -76,74 +76,106 @@ function RegisterLand({ provider, account, onSuccess }) {
 
   if (!account) {
     return (
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <p className="text-yellow-800">Please connect your wallet to register land.</p>
+      <div className="glass-panel">
+        <h2 className="text-2xl font-semibold text-white">Connect wallet to register parcels</h2>
+        <p className="mt-3 text-sm text-slate-300">
+          The registry needs a signing authority before minting new land records. Connect your
+          wallet to continue.
+        </p>
+        <div className="alert-card error mt-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            className="h-5 w-5 shrink-0"
+          >
+            <path
+              fill="currentColor"
+              d="M12 22q-2.075 0-3.9-.788T4.65 19.35 2.788 15.9 2 12t.788-3.9T4.65 4.65 8.1 2.788 12 2t3.9.788T19.35 4.65t1.862 3.45T22 12q0 2.075-.788 3.9T19.35 19.35t-3.45 1.862T12 22Zm0-3q1.725 0 3.237-.65t2.637-1.763T19.35 13.35 20 12q0-1.725-.65-3.238t-1.763-2.637T13.35 3.65 12 3q-1.725 0-3.238.65T6.125 5.063 4.65 8.1 4 12q0 1.725.65 3.238t1.763 2.637T10.65 20.35 12 21ZM11 7h2v6h-2V7Zm0 8h2v2h-2v-2Z"
+            />
+          </svg>
+          <div>
+            <p className="font-medium">Wallet signature required</p>
+            <p className="text-xs text-slate-200/70">Connect MetaMask to unlock land registration tools.</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Register New Land</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="glass-panel">
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-            Location/Address *
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="e.g., 123 Main Street, City, State"
-          />
+          <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Module 01</p>
+          <h2 className="mt-1 text-3xl font-semibold text-white">Register New Land</h2>
+          <p className="mt-3 max-w-xl text-sm text-slate-300">
+            Anchor a new parcel into the blockchain ledger. Provide the parcel metadata, verify the
+            details, and execute the minting transaction.
+          </p>
         </div>
+        <span className="badge text-cyan-200">On-chain mint</span>
+      </div>
 
-        <div>
-          <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-2">
-            Area (square meters) *
-          </label>
-          <input
-            type="number"
-            id="area"
-            name="area"
-            value={formData.area}
-            onChange={handleChange}
-            required
-            min="1"
-            step="0.01"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="e.g., 1000"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="md:col-span-2">
+            <label htmlFor="location" className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              Location / Address
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              className="input-field mt-2"
+              placeholder="e.g., 123 Ridgeway Avenue, Sector 07"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="Additional details about the land..."
-          />
+          <div>
+            <label htmlFor="area" className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              Area (square meters)
+            </label>
+            <input
+              type="number"
+              id="area"
+              name="area"
+              value={formData.area}
+              onChange={handleChange}
+              required
+              min="1"
+              step="0.01"
+              className="input-field mt-2"
+              placeholder="e.g., 1045"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label htmlFor="description" className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="4"
+              className="textarea-field mt-2"
+              placeholder="Additional metadata, land survey IDs, zoning info..."
+            />
+          </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+          <div className="alert-card error">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+          <div className="alert-card success">
             {success}
           </div>
         )}
@@ -151,7 +183,7 @@ function RegisterLand({ provider, account, onSuccess }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="primary-btn w-full"
         >
           {loading ? 'Registering...' : 'Register Land'}
         </button>
