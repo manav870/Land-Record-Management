@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import LandRegistryABI from '../artifacts/contracts/LandRegistry.sol/LandRegistry.json';
+import LandRegistryABI from '../../artifacts/contracts/LandRegistry.sol/LandRegistry.json';
 
 // Contract configuration
 // Update this address after deploying the contract
