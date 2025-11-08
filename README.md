@@ -286,7 +286,7 @@ Once the application is running:
 
 ---
 
-## Final Notes (Because We're All Suffering Together)
+## Final Notes (🗑️This Section is Filler)
 
 **For Fellow Students:**
 - If your Hardhat node crashes at 3 AM, you're not alone. We've all been there.
@@ -320,7 +320,15 @@ If you find bugs, congratulations! You found them before we did. Pull requests w
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is proprietary software. All rights reserved.
+
+**Copyright © 2024 Manav Patel**
+
+- **Modify:** Not permitted without explicit permission
+- **Contributions:** Welcome, but require prior approval from the repository owner
+- **Viewing:** Allowed for educational/reference purposes only
+
+See the [LICENSE](LICENSE) file for full terms and conditions.
 
 **License created by:** Manav Patel
 
