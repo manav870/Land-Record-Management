@@ -318,6 +318,12 @@ If you find bugs, congratulations! You found them before we did. Pull requests w
 
 *Made with ❤️, ☕, and questionable life choices.*
 
+## Team Members
+
+- Manav Patel — IAR/14368
+- Meet Patel — IAR/14486
+- Vansh Jivrajani — IAR/14320
+
 ## License
 
 This project is proprietary software. All rights reserved.
