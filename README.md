@@ -328,7 +328,7 @@ If you find bugs, congratulations! You found them before we did. Pull requests w
 
 This project is proprietary software. All rights reserved.
 
-**Copyright © 2024 Manav Patel**
+**Copyright © 2025 Manav Patel**
 
 - **Modify:** Not permitted without explicit permission
 - **Contributions:** Welcome, but require prior approval from the repository owner
