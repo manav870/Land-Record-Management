@@ -3,7 +3,7 @@ import LandRegistryABI from '../contracts/LandRegistry.json';
 
 // Contract configuration
 // Update this address after deploying the contract
-const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Default Hardhat local address
+const CONTRACT_ADDRESS = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'; // Default Hardhat local address
 
 /**
  * Get the contract instance
@@ -43,10 +43,10 @@ export const connectMetaMask = async () => {
 
   // Request account access
   await window.ethereum.request({ method: 'eth_requestAccounts' });
-  
+
   // Create provider
   const provider = new ethers.BrowserProvider(window.ethereum);
-  
+
   return provider;
 };
 

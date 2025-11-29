@@ -255,6 +255,7 @@ body::after {
     background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.22), transparent 55%);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
   }
 
   .land-card:hover::before {

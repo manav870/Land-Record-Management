@@ -59,7 +59,8 @@ function ViewLand({ provider }) {
         area: land.area.toString(),
         description: land.description,
         registrationDate: new Date(Number(land.registrationDate) * 1000).toLocaleString(),
-        exists: land.exists
+        exists: land.exists,
+        status: land.status
       };
 
       // Format history
@@ -129,6 +130,45 @@ function ViewLand({ provider }) {
           <div className="land-card">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
+                <div className="flex flex-col gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                        <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                    <span className="text-xs font-medium text-slate-300">1. Application Submitted</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {Number(landData.status) === 1 ? (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                          <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                        </svg>
+                      </span>
+                    ) : Number(landData.status) === 2 ? (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/20 text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                          <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                        </svg>
+                      </span>
+                    ) : (
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500/20 text-yellow-400 animate-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clipRule="evenodd" />
+                        </svg>
+                      </span>
+                    )}
+                    <span className={`text-xs font-medium ${Number(landData.status) === 1 ? 'text-green-400' :
+                        Number(landData.status) === 2 ? 'text-red-400' : 'text-yellow-400'
+                      }`}>
+                      2. Inspector Status: {
+                        Number(landData.status) === 1 ? 'Confirmed' :
+                          Number(landData.status) === 2 ? 'Rejected' : 'Pending Review'
+                      }
+                    </span>
+                  </div>
+                </div>
                 <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Parcel #{landData.landId}</p>
                 <h3 className="mt-1 text-2xl font-semibold text-white">{landData.location || 'Unnamed parcel'}</h3>
               </div>
@@ -215,4 +255,3 @@ function ViewLand({ provider }) {
 }
 
 export default ViewLand;
-

@@ -10,6 +10,10 @@ contract LandRegistry {
     // ============ STATE VARIABLES ============
     
     // Struct to store land parcel information
+    // Enum for land status
+    enum Status { PENDING, REGISTERED, REJECTED }
+
+    // Struct to store land parcel information
     struct LandParcel {
         uint256 landId;              // Unique identifier for the land
         address currentOwner;        // Current owner's wallet address
@@ -19,6 +23,7 @@ contract LandRegistry {
         uint256 area;                // Area in square meters
         string description;          // Additional description
         uint256 registrationDate;     // Timestamp when land was registered
+        Status status;               // Verification status
         bool exists;                 // Flag to check if land exists
     }
     
@@ -41,6 +46,9 @@ contract LandRegistry {
     
     // Counter for generating unique land IDs
     uint256 private landIdCounter;
+
+    // Admin address
+    address public admin;
     
     // ============ EVENTS ============
     
@@ -66,6 +74,15 @@ contract LandRegistry {
         address indexed to,
         uint256 timestamp
     );
+
+    /**
+     * @dev Emitted when land status is updated
+     */
+    event LandStatusUpdated(
+        uint256 indexed landId,
+        Status status,
+        uint256 timestamp
+    );
     
     // ============ MODIFIERS ============
     
@@ -87,6 +104,14 @@ contract LandRegistry {
         );
         _;
     }
+
+    /**
+     * @dev Modifier to check if caller is the admin
+     */
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this action");
+        _;
+    }
     
     // ============ CONSTRUCTOR ============
     
@@ -95,6 +120,7 @@ contract LandRegistry {
      */
     constructor() {
         landIdCounter = 1; // Start land IDs from 1
+        admin = msg.sender; // Set deployer as admin
     }
     
     // ============ MAIN FUNCTIONS ============
@@ -133,6 +159,7 @@ contract LandRegistry {
             area: _area,
             description: _description,
             registrationDate: block.timestamp,
+            status: Status.PENDING, // Default status is PENDING
             exists: true
         });
         
@@ -165,6 +192,9 @@ contract LandRegistry {
         uint256 _landId,
         address _newOwner
     ) public landExists(_landId) onlyOwner(_landId) {
+        // Check if land is registered
+        require(landRecords[_landId].status == Status.REGISTERED, "Land is not registered/approved");
+
         // Validate new owner address
         require(_newOwner != address(0), "Invalid new owner address");
         require(_newOwner != msg.sender, "Cannot transfer to yourself");
@@ -201,6 +231,24 @@ contract LandRegistry {
             _newOwner,
             block.timestamp
         );
+    }
+
+    /**
+     * @dev Approve a land parcel (Admin only)
+     * @param _landId The ID of the land to approve
+     */
+    function approveLand(uint256 _landId) public landExists(_landId) onlyAdmin {
+        landRecords[_landId].status = Status.REGISTERED;
+        emit LandStatusUpdated(_landId, Status.REGISTERED, block.timestamp);
+    }
+
+    /**
+     * @dev Reject a land parcel (Admin only)
+     * @param _landId The ID of the land to reject
+     */
+    function rejectLand(uint256 _landId) public landExists(_landId) onlyAdmin {
+        landRecords[_landId].status = Status.REJECTED;
+        emit LandStatusUpdated(_landId, Status.REJECTED, block.timestamp);
     }
     
     /**
