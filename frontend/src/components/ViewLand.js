@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { getContract } from '../utils/contract';
 import { formatAddress } from '../utils/contract';
+import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+
+const libraries = ['places'];
+const mapContainerStyle = {
+  width: '100%',
+  height: '300px',
+  borderRadius: '0.5rem',
+  marginTop: '1rem'
+};
 
 /**
  * Component for viewing land details
@@ -11,6 +20,11 @@ function ViewLand({ provider }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "", // Leave empty for development mode
+    libraries,
+  });
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -40,6 +54,8 @@ function ViewLand({ provider }) {
         landId: land.landId.toString(),
         currentOwner: land.currentOwner,
         location: land.location,
+        latitude: land.latitude ? parseFloat(land.latitude) : null,
+        longitude: land.longitude ? parseFloat(land.longitude) : null,
         area: land.area.toString(),
         description: land.description,
         registrationDate: new Date(Number(land.registrationDate) * 1000).toLocaleString(),
@@ -63,6 +79,9 @@ function ViewLand({ provider }) {
       setLoading(false);
     }
   };
+
+  if (loadError) return <div className="text-red-500">Error loading maps</div>;
+  if (!isLoaded) return <div className="text-white">Loading Maps...</div>;
 
   return (
     <div className="glass-panel">
@@ -120,9 +139,41 @@ function ViewLand({ provider }) {
                 </span>
               </div>
             </div>
+
             <p className="mt-4 text-sm text-slate-300">
               {landData.description || 'No description provided'}
             </p>
+
+            {landData.latitude && landData.longitude && (
+              <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
+                <GoogleMap
+                  mapContainerStyle={mapContainerStyle}
+                  zoom={15}
+                  center={{ lat: landData.latitude, lng: landData.longitude }}
+                  options={{
+                    styles: [
+                      {
+                        elementType: "geometry",
+                        stylers: [{ color: "#242f3e" }],
+                      },
+                      {
+                        elementType: "labels.text.stroke",
+                        stylers: [{ color: "#242f3e" }],
+                      },
+                      {
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#746855" }],
+                      },
+                    ],
+                    disableDefaultUI: true,
+                    zoomControl: true,
+                  }}
+                >
+                  <Marker position={{ lat: landData.latitude, lng: landData.longitude }} />
+                </GoogleMap>
+              </div>
+            )}
+
             <div className="mt-5 text-xs uppercase tracking-[0.25em] text-slate-500">
               Registered on {landData.registrationDate}
             </div>

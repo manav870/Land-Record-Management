@@ -14,6 +14,8 @@ contract LandRegistry {
         uint256 landId;              // Unique identifier for the land
         address currentOwner;        // Current owner's wallet address
         string location;             // Location/address of the land
+        string latitude;             // Latitude coordinate
+        string longitude;            // Longitude coordinate
         uint256 area;                // Area in square meters
         string description;          // Additional description
         uint256 registrationDate;     // Timestamp when land was registered
@@ -49,6 +51,8 @@ contract LandRegistry {
         uint256 indexed landId,
         address indexed owner,
         string location,
+        string latitude,
+        string longitude,
         uint256 area,
         uint256 timestamp
     );
@@ -98,12 +102,16 @@ contract LandRegistry {
     /**
      * @dev Register a new land parcel
      * @param _location Location/address of the land
+     * @param _latitude Latitude coordinate
+     * @param _longitude Longitude coordinate
      * @param _area Area in square meters
      * @param _description Additional description of the land
      * @return landId The unique ID assigned to the land
      */
     function registerLand(
         string memory _location,
+        string memory _latitude,
+        string memory _longitude,
         uint256 _area,
         string memory _description
     ) public returns (uint256) {
@@ -120,6 +128,8 @@ contract LandRegistry {
             landId: newLandId,
             currentOwner: msg.sender,
             location: _location,
+            latitude: _latitude,
+            longitude: _longitude,
             area: _area,
             description: _description,
             registrationDate: block.timestamp,
@@ -137,6 +147,8 @@ contract LandRegistry {
             newLandId,
             msg.sender,
             _location,
+            _latitude,
+            _longitude,
             _area,
             block.timestamp
         );

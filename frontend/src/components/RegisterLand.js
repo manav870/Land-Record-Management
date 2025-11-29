@@ -1,5 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { getContract } from '../utils/contract';
+import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+
+const libraries = ['places'];
+const mapContainerStyle = {
+  width: '100%',
+  height: '300px',
+  borderRadius: '0.5rem',
+  marginTop: '0.5rem'
+};
+const center = {
+  lat: 20.5937, // India center
+  lng: 78.9629
+};
 
 /**
  * Component for registering new land parcels
@@ -10,9 +23,22 @@ function RegisterLand({ provider, account, onSuccess }) {
     area: '',
     description: ''
   });
+  const [coordinates, setCoordinates] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "", // Leave empty for development mode (will show watermark)
+    libraries,
+  });
+
+  const onMapClick = useCallback((event) => {
+    setCoordinates({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng()
+    });
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -37,6 +63,9 @@ function RegisterLand({ provider, account, onSuccess }) {
       if (!formData.area || parseFloat(formData.area) <= 0) {
         throw new Error('Area must be greater than zero');
       }
+      if (!coordinates) {
+        throw new Error('Please select a location on the map');
+      }
 
       // Get contract instance
       const contract = await getContract(provider);
@@ -44,6 +73,8 @@ function RegisterLand({ provider, account, onSuccess }) {
       // Register land
       const tx = await contract.registerLand(
         formData.location.trim(),
+        coordinates.lat.toString(),
+        coordinates.lng.toString(),
         formData.area,
         formData.description.trim()
       );
@@ -61,6 +92,7 @@ function RegisterLand({ provider, account, onSuccess }) {
         area: '',
         description: ''
       });
+      setCoordinates(null);
 
       // Notify parent component
       if (onSuccess) {
@@ -102,6 +134,9 @@ function RegisterLand({ provider, account, onSuccess }) {
     );
   }
 
+  if (loadError) return <div className="text-red-500">Error loading maps</div>;
+  if (!isLoaded) return <div className="text-white">Loading Maps...</div>;
+
   return (
     <div className="glass-panel">
       <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
@@ -132,6 +167,45 @@ function RegisterLand({ provider, account, onSuccess }) {
               className="input-field mt-2"
               placeholder="e.g., 123 Ridgeway Avenue, Sector 07"
             />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
+              Pin Location on Map
+            </label>
+            <div className="mt-2 overflow-hidden rounded-lg border border-white/10">
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                zoom={5}
+                center={center}
+                onClick={onMapClick}
+                options={{
+                  styles: [
+                    {
+                      elementType: "geometry",
+                      stylers: [{ color: "#242f3e" }],
+                    },
+                    {
+                      elementType: "labels.text.stroke",
+                      stylers: [{ color: "#242f3e" }],
+                    },
+                    {
+                      elementType: "labels.text.fill",
+                      stylers: [{ color: "#746855" }],
+                    },
+                  ],
+                  disableDefaultUI: true,
+                  zoomControl: true,
+                }}
+              >
+                {coordinates && <Marker position={coordinates} />}
+              </GoogleMap>
+            </div>
+            {coordinates && (
+              <p className="mt-2 text-xs text-cyan-300">
+                Selected: {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
+              </p>
+            )}
           </div>
 
           <div>
