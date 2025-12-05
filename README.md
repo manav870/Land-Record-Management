@@ -316,7 +316,7 @@ If you find bugs, congratulations! You found them before we did. Pull requests w
 
 ---
 
-*Made with ❤️, ☕, and questionable life choices.*
+*Made with ❤️ and tons of ☕.*
 
 ## Team Members
 
